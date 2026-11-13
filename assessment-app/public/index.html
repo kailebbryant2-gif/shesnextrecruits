@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#0a0c18">
+  <meta name="theme-color" content="#14070f">
   <title>She's Next College Finder AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,41 +12,52 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <div class="court" aria-hidden="true">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="600" cy="400" r="120"/><line x1="600" y1="0" x2="600" y2="800"/>
+      <path d="M0 160 H170 A240 240 0 0 1 170 640 H0"/><rect x="0" y="290" width="230" height="220"/><circle cx="230" cy="400" r="70"/>
+      <path d="M1200 160 H1030 A240 240 0 0 0 1030 640 H1200"/><rect x="970" y="290" width="230" height="220"/><circle cx="970" cy="400" r="70"/>
+    </g></svg>
+  </div>
+
   <header class="topbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z" fill="currentColor"/><circle cx="19" cy="18" r="2.2" fill="currentColor" opacity=".7"/></svg></span>
       <span class="brand-name">She's Next <b>College Finder</b></span>
       <span class="ai">AI</span>
     </div>
-    <span class="beta">Beta</span>
+    <span class="beta">Built for girls' basketball</span>
   </header>
 
   <div class="layout">
     <aside class="panel side" id="side" aria-label="Her profile">
       <div class="side-head">
-        <h1>Find college programs <span class="grad">worth her time.</span></h1>
-        <p class="muted">Three answers to start. Results update as you go.</p>
+        <h1>Find the college programs <span class="grad">made for her game.</span></h1>
+        <p class="muted">Tell us about her, then tap <b>Find her colleges</b>.</p>
       </div>
       <form id="form" novalidate>
-        <div class="field">
-          <label class="lbl">Grade</label>
-          <div class="seg" data-key="grade" data-single role="radiogroup" aria-label="Grade"></div>
-        </div>
-        <div class="field">
-          <label class="lbl">Position <span class="hint">pick all she plays</span></label>
-          <div class="chips" data-key="positions" aria-label="Position"></div>
-        </div>
-        <div class="field">
-          <label class="lbl" for="zip">Home ZIP</label>
-          <div class="search">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>
-            <input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 63101">
+        <div class="group">
+          <p class="gtitle"><span class="gnum">1</span>The basics <span class="req">Required</span></p>
+          <div class="field">
+            <label class="lbl">Grade</label>
+            <div class="seg" data-key="grade" data-single role="radiogroup" aria-label="Grade"></div>
           </div>
-          <div class="chips small" data-key="radius" data-single aria-label="Distance from home"></div>
+          <div class="field">
+            <label class="lbl">Position <span class="hint">pick all she plays</span></label>
+            <div class="chips" data-key="positions" aria-label="Position"></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="zip">Home ZIP &amp; distance</label>
+            <div class="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>
+              <input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="ZIP code">
+            </div>
+            <div class="chips small" data-key="radius" data-single aria-label="Distance from home"></div>
+          </div>
         </div>
 
-        <details class="more" id="more">
-          <summary><span>Add detail for sharper results</span><span class="count" id="moreCount">0 of 4</span></summary>
+        <div class="group">
+          <p class="gtitle"><span class="gnum">2</span>Her skill level <span class="boost">✦ Powers skill matching</span></p>
           <div class="field">
             <label class="lbl">Height</label>
             <div class="stepper" id="heightBox">
@@ -57,6 +68,26 @@
             </div>
           </div>
           <div class="field">
+            <label class="lbl">Her role on her best team</label>
+            <div class="chips small" data-key="role" data-single aria-label="Role"></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Has a coach or trainer said what level she can play? <span class="hint">all that apply</span></label>
+            <div class="chips small" data-key="evalLevels" aria-label="Evaluator level"></div>
+          </div>
+          <div class="field">
+            <label class="lbl">College interest so far</label>
+            <div class="chips small" data-key="interest" aria-label="Recruiting interest"></div>
+            <div class="sub" id="levelsWrap" hidden>
+              <span class="hint">From which levels?</span>
+              <div class="chips small" data-key="interestLevels" aria-label="Levels showing interest"></div>
+            </div>
+          </div>
+        </div>
+
+        <details class="group more" id="more">
+          <summary><span class="gtitle" style="margin:0"><span class="gnum">3</span>More about her</span><span class="count">Optional</span></summary>
+          <div class="field">
             <label class="lbl">GPA</label>
             <div class="chips small" data-key="gpa" data-single aria-label="GPA"></div>
           </div>
@@ -64,16 +95,12 @@
             <label class="lbl">Where she plays</label>
             <div class="chips small" data-key="playing" aria-label="Where she plays"></div>
           </div>
-          <div class="field">
-            <label class="lbl">Recruiting interest so far</label>
-            <div class="chips small" data-key="interest" aria-label="Recruiting interest"></div>
-            <div class="sub" id="levelsWrap" hidden>
-              <span class="hint">From which levels?</span>
-              <div class="chips small" data-key="interestLevels" aria-label="Levels showing interest"></div>
-            </div>
-          </div>
         </details>
       </form>
+      <div class="go-wrap">
+        <button type="button" class="go" id="go" disabled>Find her colleges <span aria-hidden="true">✦</span></button>
+        <p class="go-hint" id="goHint">Add grade, position and ZIP to start</p>
+      </div>
       <p class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z" fill="none" stroke="currentColor" stroke-width="2"/></svg>No account, email or phone. Answers stay in your browser.</p>
     </aside>
 

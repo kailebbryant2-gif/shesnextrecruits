@@ -71,3 +71,42 @@ test('rejects missing required fields', () => {
   assert.equal(r.ok, false);
   assert.deepEqual(r.errors.sort(), ['grade', 'positions', 'zip'].sort());
 });
+
+test('skill match: evaluator + height in range makes a level "explore first"', () => {
+  const r = assess({ ...min, height: 68, evalLevels: ['D2'] }, now);
+  const d2 = r.levels.find(l => l.level === 'D2');
+  assert.equal(d2.evidence.score, 3);
+  assert.equal(d2.status, 'explore_first');
+  assert.deepEqual(r.match.levels, ['D2']);
+  assert.equal(r.levels[0].level, 'D2');
+});
+
+test('skill match: height alone never creates a match', () => {
+  const r = assess({ ...min, height: 68 }, now);
+  assert.equal(r.match.levels, null);
+  assert.ok(r.levels.every(l => l.status === 'open'));
+});
+
+test('skill match: evidence labels and confidence', () => {
+  const none = assess(min, now);
+  assert.equal(none.match.confidence.level, 'Low');
+  assert.ok(none.levels.every(l => l.evidence.label === 'None yet'));
+  const rich = assess({ ...min, height: 68, role: 'starter', evalLevels: ['D2'], interest: ['watched'], interestLevels: ['D2'] }, now);
+  assert.equal(rich.match.confidence.level, 'High');
+  assert.equal(rich.levels.find(l => l.level === 'D2').evidence.label, 'Strong');
+});
+
+test('skill match: below-range height adds no evidence', () => {
+  const r = assess({ ...min, height: 60, positions: ['post'], evalLevels: ['D1'] }, now);
+  const d1 = r.levels.find(l => l.level === 'D1');
+  assert.equal(d1.size.rel, 'below');
+  assert.equal(d1.evidence.score, 2);
+});
+
+test('role drives recommendations, not level', () => {
+  const r = assess({ ...min, grade: 11, role: 'go_to', interest: ['none'] }, now);
+  assert.ok(r.actions.some(a => a.id === 'underexposed'));
+  assert.equal(r.match.levels, null);
+  const r2 = assess({ ...min, role: 'limited' }, now);
+  assert.ok(r2.actions.some(a => a.id === 'earn-role') || r2.actions.length === 4);
+});

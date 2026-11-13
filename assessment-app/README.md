@@ -1,7 +1,8 @@
 # She's Next College Finder AI (prototype)
 
-A dark, app-style college finder for girls' basketball families. Three required inputs (grade, position, home ZIP) plus optional
-detail; results update live. The guidance engine implements the recruiting methodology documented in `../coach-tay-knowledge-base/`;
+An app-style college finder for girls' basketball families. Three required inputs (grade, position, home ZIP), a short
+"skill level" section (height, role, evaluator's level, college interest) that powers skill matching, and optional detail.
+Parents tap **Find her colleges** to get results; editing the profile afterward offers **Update results**. The guidance engine implements the recruiting methodology documented in `../coach-tay-knowledge-base/`;
 every recommendation keeps an internal `src` reference to its knowledge-base entry (not shown in the UI).
 
 ## Run
@@ -46,3 +47,9 @@ The repo root has a `render.yaml` Blueprint. In Render: **New → Blueprint**, p
 `SCORECARD_API_KEY` and `QUAD_API_KEY` when prompted. Render runs `npm start` (keys come from Render's environment),
 checks `/healthz`, and redeploys on every push to `main`.
 Rate limits per visitor: 240 assessments and 40 school searches per 10 minutes; school results are cached for an hour, so live updates don't spend API calls.
+
+## Skill matching
+Per level, the engine scores the evidence the methodology recognizes: coach interest from that level (strong 3 / early 1),
+an experienced evaluator naming that level (2), and height in or above the typical range (1). Scores map to
+None yet / Limited / Some / Strong; colleges sort by their level's score, then distance. These weights are a product choice,
+not published benchmarks. They live in `lib/engine.js` (`WEIGHTS`) and are listed for expert review (questions file Q-071).

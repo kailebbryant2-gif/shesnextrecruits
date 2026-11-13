@@ -141,6 +141,13 @@ Each question has a stable `Q-###` ID and links to the entries it affects.
 - **Question:** `coach-tay-methodology.md` §0 is an interpretation-labeled synthesis of the whole methodology (funnel stages, evaluation dimensions, level method, fit, exposure, roles). Does it represent how you think? What's missing or mis-weighted?
 - **Status:** Open
 
+### Q-071 · Review the College Finder's skill-match weights
+- **Context:** The College Finder app combines the three kinds of level evidence the course recognizes into an evidence rating per level: coach interest from a level [LEVEL-T S4–S5], an experienced evaluator's opinion [LEVEL-T S10], and height vs. the typical range [EVAL-052].
+- **Current weights (product design choice, not from the course):** strong coach interest (contact, watched, visit, offer) = 3 · early interest (mail, camp invite) = 1 · evaluator named the level = 2 · height in/above typical range = 1. Labels: 0 None yet · 1 Limited · 2–3 Some · 4+ Strong. A level is highlighted as a match at 3+ or with strong interest. Role on her team affects recommendations only, never level.
+- **Question:** Does this ordering of evidence match how you'd weigh it? Should an evaluator's opinion ever outweigh real coach interest? Should role or competition level (e.g., exposure-circuit AAU starter) count as evidence?
+- **Code:** `assessment-app/lib/engine.js` → `WEIGHTS`
+- **Status:** Open
+
 ### Q-024 · How to decide between offers, and how long to wait
 - **Question:** Beyond committing before senior year and not giving up offers to wait on interest, how should a family weigh offers against each other? When do you stop waiting on a back-burner school?
 - **Related:** FIT-013, FIT-014, STR-022
