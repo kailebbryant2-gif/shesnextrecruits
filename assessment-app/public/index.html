@@ -2,70 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>Recruiting Profile Check</title>
+  <meta name="theme-color" content="#fbf7f5">
+  <title>Recruiting Profile Check · She's Next Recruits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="top">
-    <p class="eyebrow">She's Next Recruits</p>
-    <h1>60-second recruiting profile check</h1>
-    <p class="lede">Seven quick questions. You'll get guidance based on Coach Tay's recruiting methodology. No account, email or phone number needed.</p>
-  </header>
+  <div class="app" id="app">
+    <!-- Intro -->
+    <section class="screen intro is-active" id="intro" aria-labelledby="introTitle">
+      <div class="intro-inner">
+        <p class="pill"><span class="dot" aria-hidden="true"></span>Coach Tay's recruiting method</p>
+        <h1 id="introTitle">Where does your daughter <em>really</em> stand in recruiting?</h1>
+        <p class="lede">Answer seven quick questions and get her recruiting stage, the college levels worth exploring, schools to research, and Coach Tay's game plan for her grade.</p>
+        <button class="cta" id="startBtn" type="button">Start the 60-second check <span aria-hidden="true">→</span></button>
+        <ul class="trust">
+          <li><span aria-hidden="true">⏱</span> About 60 seconds</li>
+          <li><span aria-hidden="true">✉</span> No email or account</li>
+          <li><span aria-hidden="true">🏀</span> Grades 8–12</li>
+        </ul>
+      </div>
+    </section>
 
-  <main>
-    <form id="quiz" novalidate>
-      <fieldset class="q" data-name="grade" data-type="single">
-        <legend><span class="n">1</span> What grade is she in right now?</legend>
-        <div class="chips" role="radiogroup"></div>
-      </fieldset>
+    <!-- Questionnaire -->
+    <section class="screen quiz" id="quiz" aria-live="polite" hidden>
+      <header class="quiz-top">
+        <button class="back" id="backBtn" type="button" aria-label="Back">←</button>
+        <div class="progress" role="progressbar" aria-valuemin="1" aria-valuemax="7" id="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <span class="step-count" id="stepCount">1 / 7</span>
+      </header>
+      <div class="stage" id="stage"></div>
+      <footer class="quiz-foot">
+        <p class="error" id="stepError" role="alert" hidden></p>
+        <button class="cta" id="nextBtn" type="button">Continue <span aria-hidden="true">→</span></button>
+      </footer>
+    </section>
 
-      <fieldset class="q">
-        <legend><span class="n">2</span> How tall is she?</legend>
-        <select id="height" name="height" required><option value="">Select height</option></select>
-      </fieldset>
+    <!-- Loading -->
+    <section class="screen loading" id="loading" hidden aria-live="polite">
+      <div class="loader" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h2>Reviewing her profile…</h2>
+      <ul class="load-steps" id="loadSteps">
+        <li>Placing her on Coach Tay's recruiting timeline</li>
+        <li>Weighing her recruiting signals</li>
+        <li>Finding colleges near you</li>
+        <li>Building her game plan</li>
+      </ul>
+    </section>
 
-      <fieldset class="q" data-name="positions" data-type="multi">
-        <legend><span class="n">3</span> Which positions can she play? <span class="hint">Select all that apply</span></legend>
-        <div class="chips"></div>
-      </fieldset>
-
-      <fieldset class="q" data-name="playing" data-type="multi">
-        <legend><span class="n">4</span> Where does she currently play? <span class="hint">Select all that apply</span></legend>
-        <div class="chips"></div>
-      </fieldset>
-
-      <fieldset class="q">
-        <legend><span class="n">5</span> What's her approximate GPA?</legend>
-        <select id="gpa" name="gpa" required><option value="">Select GPA range</option></select>
-      </fieldset>
-
-      <fieldset class="q" data-name="interest" data-type="multi" data-exclusive="none">
-        <legend><span class="n">6</span> What recruiting interest has she received so far? <span class="hint">Select all that apply</span></legend>
-        <div class="chips"></div>
-        <details class="sub" id="levelsBox">
-          <summary>From which levels? <span class="hint">Optional</span></summary>
-          <div class="chips" data-name="interestLevels" data-type="multi"></div>
-        </details>
-      </fieldset>
-
-      <fieldset class="q" data-name="distance" data-type="single">
-        <legend><span class="n">7</span> Where would she like to go to school?</legend>
-        <label class="zip">Your home ZIP code
-          <input id="zip" name="zip" inputmode="numeric" pattern="\d{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 63101">
-        </label>
-        <div class="chips" role="radiogroup"></div>
-      </fieldset>
-
-      <p class="error" id="formError" role="alert" hidden></p>
-      <button type="submit" class="primary" id="submitBtn">See her recruiting profile</button>
-      <p class="fine">Initial guidance, not a scouting evaluation. We don't store your answers.</p>
-    </form>
-
-    <section id="results" hidden aria-live="polite"></section>
-  </main>
-
+    <!-- Results -->
+    <section class="screen results" id="results" hidden></section>
+  </div>
   <script type="module" src="/app.js"></script>
 </body>
 </html>
