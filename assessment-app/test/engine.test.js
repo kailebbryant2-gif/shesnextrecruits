@@ -2,60 +2,72 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { assess, gradYear } from '../lib/engine.js';
 
-const base = { grade: 10, height: 68, positions: ['wing'], playing: ['hs_varsity_starter', 'aau_local'], gpa: '3.5', interest: ['camp_invite'], interestLevels: ['D2'], zip: '63101', distance: 'near' };
 const now = new Date('2026-11-13');
+const min = { grade: 10, positions: ['wing'], zip: '63101', radius: 100 };
+const full = { ...min, height: 68, playing: ['hs_varsity', 'aau_local'], gpa: '3.5', interest: ['camp_invite'], interestLevels: ['D2'] };
 
-test('valid input produces all five sections', () => {
-  const r = assess(base, now);
+test('only grade, position and ZIP are required', () => {
+  const r = assess(min, now);
   assert.equal(r.ok, true);
-  for (const k of ['profile', 'pathways', 'recommendations', 'checklist']) assert.ok(r[k]);
-  assert.equal(r.pathways.length, 5);
-  assert.ok(r.recommendations.length >= 3 && r.recommendations.length <= 5);
+  assert.equal(r.profile.height, null);
+  assert.equal(r.signal.strength, 'none');
+  assert.ok(r.levels.every(l => l.size === null), 'no size context without height');
 });
 
-test('graduation year: 10th grader in Nov 2026 is class of 2029', () => {
+test('graduation year rolls over in August', () => {
   assert.equal(gradYear(10, now), 2029);
   assert.equal(gradYear(12, now), 2027);
 });
 
-test('never states a division classification or probability', () => {
-  const r = JSON.stringify(assess({ ...base, height: 76, positions: ['post'], interest: ['offer'], interestLevels: ['D1'] }, now));
-  assert.doesNotMatch(r, /\b(is|she's|she is) (a )?(D1|D2|D3|Division I+)\b(?! (offer|interest))/i);
-  assert.doesNotMatch(r, /\d+\s?% (chance|probability)/i);
-});
-
-test('weak signals (mail/camp invites) never put a level in "explore first"', () => {
-  const r = assess(base, now);
-  assert.ok(r.pathways.every(p => p.status !== 'explore_first'));
-});
-
-test('strong signal from a level puts that level first', () => {
-  const r = assess({ ...base, interest: ['watched'], interestLevels: ['NAIA'] }, now);
-  assert.equal(r.pathways[0].level, 'NAIA');
-  assert.equal(r.pathways[0].status, 'explore_first');
-});
-
-test('every recommendation and checklist item cites a source', () => {
+test('no user-facing text mentions Coach Tay', () => {
   for (const g of [8, 9, 10, 11, 12]) {
-    const r = assess({ ...base, grade: g }, now);
-    r.recommendations.forEach(x => assert.ok(x.src, x.id));
-    r.checklist.forEach(x => assert.ok(x.src));
+    const r = assess({ ...full, grade: g, interest: ['offer'], interestLevels: ['D1'] }, now);
+    const visible = JSON.stringify(r, (k, v) => (k === 'src' ? undefined : v));
+    assert.doesNotMatch(visible, /Coach Tay/i);
   }
 });
 
-test('offer triggers the timeline recommendation first', () => {
-  const r = assess({ ...base, grade: 11, interest: ['offer'], interestLevels: ['D2'] }, now);
-  assert.equal(r.recommendations[0].id, 'offer-timeline');
+test('never states a division classification or probability', () => {
+  const r = JSON.stringify(assess({ ...full, height: 76, positions: ['post'], interest: ['offer'], interestLevels: ['D1'] }, now));
+  assert.doesNotMatch(r, /\b(she is|she's) (a )?(D1|D2|D3|Division)/i);
+  assert.doesNotMatch(r, /\d+\s?% (chance|probability)/i);
 });
 
-test('"none" interest is exclusive and senior with none gets urgent outreach', () => {
-  const r = assess({ ...base, grade: 12, interest: ['none', 'mail'] }, now);
-  assert.deepEqual(r.profile.interest, ['None yet']);
-  assert.equal(r.recommendations[0].id, 'senior-flood');
+test('early signals never mark a level "explore first"', () => {
+  const r = assess(full, now);
+  assert.ok(r.levels.every(l => l.status !== 'explore_first'));
+  assert.equal(r.signal.strength, 'early');
 });
 
-test('rejects bad input', () => {
-  const r = assess({ ...base, zip: '6310', grade: 7, positions: [] }, now);
+test('strong signal puts that level first and sets focus', () => {
+  const r = assess({ ...full, interest: ['watched'], interestLevels: ['NAIA'] }, now);
+  assert.equal(r.levels[0].level, 'NAIA');
+  assert.deepEqual(r.focus, ['NAIA']);
+});
+
+test('size context uses the best-fitting position group', () => {
+  const r = assess({ ...full, height: 70, positions: ['wing', 'four'] }, now);
+  const d1 = r.levels.find(l => l.level === 'D1');
+  assert.equal(d1.size.rel, 'within');
+});
+
+test('actions: 1–4 items, every one sourced; offer comes first', () => {
+  for (const g of [8, 9, 10, 11, 12]) {
+    const r = assess({ ...full, grade: g }, now);
+    assert.ok(r.actions.length >= 1 && r.actions.length <= 4);
+    r.actions.forEach(a => assert.ok(a.src, a.id));
+  }
+  assert.equal(assess({ ...full, grade: 11, interest: ['offer'] }, now).actions[0].id, 'offer-timeline');
+});
+
+test('"none" interest is exclusive', () => {
+  const r = assess({ ...full, interest: ['none', 'mail'], interestLevels: ['D1'] }, now);
+  assert.equal(r.signal.label, 'None yet');
+  assert.equal(r.focus, null);
+});
+
+test('rejects missing required fields', () => {
+  const r = assess({ grade: 7, positions: [], zip: '6310' }, now);
   assert.equal(r.ok, false);
   assert.deepEqual(r.errors.sort(), ['grade', 'positions', 'zip'].sort());
 });

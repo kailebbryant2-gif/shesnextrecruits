@@ -4,61 +4,82 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#fbf7f5">
-  <title>Recruiting Profile Check · She's Next Recruits</title>
+  <meta name="theme-color" content="#0a0c18">
+  <title>She's Next College Finder AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="app" id="app">
-    <!-- Intro -->
-    <section class="screen intro is-active" id="intro" aria-labelledby="introTitle">
-      <div class="intro-inner">
-        <p class="pill"><span class="dot" aria-hidden="true"></span>Coach Tay's recruiting method</p>
-        <h1 id="introTitle">Where does your daughter <em>really</em> stand in recruiting?</h1>
-        <p class="lede">Answer seven quick questions and get her recruiting stage, the college levels worth exploring, schools to research, and Coach Tay's game plan for her grade.</p>
-        <button class="cta" id="startBtn" type="button">Start the 60-second check <span aria-hidden="true">→</span></button>
-        <ul class="trust">
-          <li><span aria-hidden="true">⏱</span> About 60 seconds</li>
-          <li><span aria-hidden="true">✉</span> No email or account</li>
-          <li><span aria-hidden="true">🏀</span> Grades 8–12</li>
-        </ul>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z" fill="currentColor"/><circle cx="19" cy="18" r="2.2" fill="currentColor" opacity=".7"/></svg></span>
+      <span class="brand-name">She's Next <b>College Finder</b></span>
+      <span class="ai">AI</span>
+    </div>
+    <span class="beta">Beta</span>
+  </header>
+
+  <div class="layout">
+    <aside class="panel side" id="side" aria-label="Her profile">
+      <div class="side-head">
+        <h1>Find college programs <span class="grad">worth her time.</span></h1>
+        <p class="muted">Three answers to start. Results update as you go.</p>
       </div>
-    </section>
-
-    <!-- Questionnaire -->
-    <section class="screen quiz" id="quiz" aria-live="polite" hidden>
-      <header class="quiz-top">
-        <button class="back" id="backBtn" type="button" aria-label="Back">←</button>
-        <div class="progress" role="progressbar" aria-valuemin="1" aria-valuemax="7" id="progress">
-          <div class="progress-bar" id="progressBar"></div>
+      <form id="form" novalidate>
+        <div class="field">
+          <label class="lbl">Grade</label>
+          <div class="seg" data-key="grade" data-single role="radiogroup" aria-label="Grade"></div>
         </div>
-        <span class="step-count" id="stepCount">1 / 7</span>
-      </header>
-      <div class="stage" id="stage"></div>
-      <footer class="quiz-foot">
-        <p class="error" id="stepError" role="alert" hidden></p>
-        <button class="cta" id="nextBtn" type="button">Continue <span aria-hidden="true">→</span></button>
-      </footer>
-    </section>
+        <div class="field">
+          <label class="lbl">Position <span class="hint">pick all she plays</span></label>
+          <div class="chips" data-key="positions" aria-label="Position"></div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="zip">Home ZIP</label>
+          <div class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" fill="currentColor"/></svg>
+            <input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 63101">
+          </div>
+          <div class="chips small" data-key="radius" data-single aria-label="Distance from home"></div>
+        </div>
 
-    <!-- Loading -->
-    <section class="screen loading" id="loading" hidden aria-live="polite">
-      <div class="loader" aria-hidden="true"><span></span><span></span><span></span></div>
-      <h2>Reviewing her profile…</h2>
-      <ul class="load-steps" id="loadSteps">
-        <li>Placing her on Coach Tay's recruiting timeline</li>
-        <li>Weighing her recruiting signals</li>
-        <li>Finding colleges near you</li>
-        <li>Building her game plan</li>
-      </ul>
-    </section>
+        <details class="more" id="more">
+          <summary><span>Add detail for sharper results</span><span class="count" id="moreCount">0 of 4</span></summary>
+          <div class="field">
+            <label class="lbl">Height</label>
+            <div class="stepper" id="heightBox">
+              <button type="button" class="ib" id="hMinus" aria-label="Shorter">−</button>
+              <output id="hOut">Add</output>
+              <button type="button" class="ib" id="hPlus" aria-label="Taller">+</button>
+              <button type="button" class="link" id="hClear" hidden>Clear</button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl">GPA</label>
+            <div class="chips small" data-key="gpa" data-single aria-label="GPA"></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Where she plays</label>
+            <div class="chips small" data-key="playing" aria-label="Where she plays"></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Recruiting interest so far</label>
+            <div class="chips small" data-key="interest" aria-label="Recruiting interest"></div>
+            <div class="sub" id="levelsWrap" hidden>
+              <span class="hint">From which levels?</span>
+              <div class="chips small" data-key="interestLevels" aria-label="Levels showing interest"></div>
+            </div>
+          </div>
+        </details>
+      </form>
+      <p class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z" fill="none" stroke="currentColor" stroke-width="2"/></svg>No account, email or phone. Answers stay in your browser.</p>
+    </aside>
 
-    <!-- Results -->
-    <section class="screen results" id="results" hidden></section>
+    <main class="main" id="main" aria-live="polite"></main>
   </div>
+  <button type="button" class="jump" id="jump" hidden>See her results <span aria-hidden="true">↓</span></button>
   <script type="module" src="/app.js"></script>
 </body>
 </html>
