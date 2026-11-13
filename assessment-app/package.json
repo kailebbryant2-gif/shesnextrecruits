@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "60-second recruiting assessment prototype based on Coach Tay's methodology",
-  "scripts": { "start": "node --env-file=.env server.js", "test": "node --test" },
-  "engines": { "node": ">=20.6" }
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --env-file=.env server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.6"
+  }
 }

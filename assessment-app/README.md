@@ -8,7 +8,7 @@ Requires Node 20.6+ and no npm dependencies.
 
 ```
 cp .env.example .env      # then paste keys into .env (never commit it)
-npm start                 # http://localhost:3000
+npm run dev               # http://localhost:3000 (reads .env)
 npm test                  # engine guardrail tests
 ```
 
@@ -39,3 +39,9 @@ Rotate any key that has been shared in chat or email.
 - `lib/content.js`: Coach Tay content and size chart, with sources
 - `lib/scorecard.js`, `lib/quad.js`: data adapters
 - `public/`: questionnaire and results UI
+
+## Deploy (Render)
+The repo root has a `render.yaml` Blueprint. In Render: **New → Blueprint**, pick this repo, and enter
+`SCORECARD_API_KEY` and `QUAD_API_KEY` when prompted. Render runs `npm start` (keys come from Render's environment),
+checks `/healthz`, and redeploys on every push to `main`.
+The assessment endpoint is rate-limited to 20 requests per 10 minutes per visitor to protect the API quotas.

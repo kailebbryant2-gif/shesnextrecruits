@@ -43,7 +43,13 @@ async function quadGet(path, params) {
   const res = await fetch(`${BASE}${path}?${new URLSearchParams(params)}`, {
     headers: { Authorization: `Bearer ${process.env.QUAD_API_KEY}`, Accept: 'application/json' },
   });
-  if (!res.ok) throw new Error(`Quad ${res.status}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const err = new Error(`Quad ${res.status}`);
+    // Quad rejects ZIPs it can't place (e.g. PO-box-only ZIPs) with a 400 that mentions `near`.
+    if (res.status === 400 && /near/.test(body?.error?.message || '')) err.code = 'UNKNOWN_ZIP';
+    throw err;
+  }
   return res.json();
 }
 

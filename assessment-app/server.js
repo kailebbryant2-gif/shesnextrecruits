@@ -1,5 +1,5 @@
 // She's Next Recruits: 60-second assessment (prototype).
-// Zero dependencies (Node 18+). Run: node --env-file=.env server.js
+// Zero dependencies. Local: `npm run dev` (reads .env). Hosted (Render): `npm start`, keys from environment.
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
@@ -30,7 +30,11 @@ async function findSchools(clean, pathways) {
       const q = await searchAthleticSchools({ zip: clean.zip, distance: clean.distance });
       out.radiusMiles = q.radiusMiles; out.fourYearTotal = q.items.length;
       out.fourYear = selectSchools(q.items, pathways);
-    } catch (e) { console.error(e.message); out.errors.push('Four-year college data is temporarily unavailable.'); }
+    } catch (e) {
+      console.error(e.message);
+      if (e.code === 'UNKNOWN_ZIP') { out.unknownZip = true; return out; }
+      out.errors.push('Four-year college data is temporarily unavailable.');
+    }
   }
   try {
     const twoYearOnly = quadConfigured();
@@ -45,11 +49,25 @@ async function findSchools(clean, pathways) {
   return out;
 }
 
+// Simple in-memory rate limit for the assessment endpoint (protects the Quad / Scorecard daily quotas).
+const WINDOW_MS = 10 * 60 * 1000, MAX_PER_WINDOW = 20;
+const hits = new Map();
+function rateLimited(req) {
+  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  const now = Date.now();
+  const recent = (hits.get(ip) || []).filter(t => now - t < WINDOW_MS);
+  recent.push(now); hits.set(ip, recent);
+  if (hits.size > 5000) for (const [k, v] of hits) if (now - v[v.length - 1] > WINDOW_MS) hits.delete(k);
+  return recent.length > MAX_PER_WINDOW;
+}
+
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
+    if (req.method === 'GET' && url.pathname === '/healthz') return send(res, 200, { ok: true });
     if (req.method === 'GET' && url.pathname === '/api/options') return send(res, 200, OPTIONS);
     if (req.method === 'POST' && url.pathname === '/api/assess') {
+      if (rateLimited(req)) return send(res, 429, { ok: false, error: 'Too many requests. Please try again in a few minutes.' });
       const answers = await readBody(req);
       const result = assess(answers);
       if (!result.ok) return send(res, 400, result);

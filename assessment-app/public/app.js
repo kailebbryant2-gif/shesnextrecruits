@@ -69,6 +69,7 @@ $('#quiz').addEventListener('submit', async e => {
   try {
     const res = await fetch('/api/assess', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(collect()) });
     const data = await res.json();
+    if (res.status === 429) { err.textContent = data.error; err.hidden = false; return; }
     if (!data.ok) {
       err.textContent = 'Please answer: ' + (data.errors || []).map(k => FIELD_NAMES[k] || k).join(', ') + '.';
       err.hidden = false; return;
@@ -175,6 +176,7 @@ function schoolCard(c, pathways) {
 function schoolsHtml(d) {
   const s = d.schools;
   const radius = s.radiusMiles ? `within about ${s.radiusMiles} miles of your ZIP` : 'nationwide';
+  if (s.unknownZip) return '<p class="notice"><strong>We couldn\u2019t place that ZIP code.</strong> Some ZIP codes are only for PO boxes. Try your home ZIP code to see schools near you. The rest of her results above and below don\u2019t depend on it.</p>';
   const errs = (s.errors || []).map(e => `<p class="notice">${esc(e)}</p>`).join('');
   if (!s.fourYear.length && !s.twoYear.length) return errs || '<p>No colleges found in that range. Try a wider distance.</p>';
   return `<p class="notice"><strong>These schools match your stated preferences, not her athletic fit.</strong> They're ordered closest first, with a mix of levels and the levels marked "Explore first" up top. Nothing here means a program needs her or that her level fits. That takes film, coach interest and research.</p>

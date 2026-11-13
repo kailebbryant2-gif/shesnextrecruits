@@ -33,3 +33,12 @@ test('selectSchools with no signals spreads evenly and caps at max', () => {
   assert.equal(r.length, 6);
   assert.ok(r.filter(s => s.level === 'D2').length <= 2);
 });
+
+test('unknown ZIP from Quad is flagged, not shown as an outage', async () => {
+  const { searchAthleticSchools } = await import('../lib/quad.js');
+  process.env.QUAD_API_KEY = 'test';
+  const orig = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify({ error: { code: 'bad_request', message: 'near: use a five-digit ZIP code the site knows' } }), { status: 400 });
+  try { await assert.rejects(searchAthleticSchools({ zip: '30301', distance: 'near' }), e => e.code === 'UNKNOWN_ZIP'); }
+  finally { globalThis.fetch = orig; delete process.env.QUAD_API_KEY; }
+});

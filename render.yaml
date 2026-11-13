@@ -1,0 +1,18 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: shes-next-assessment
+    runtime: node
+    rootDir: assessment-app
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SCORECARD_API_KEY
+        sync: false   # entered in the Render dashboard, never committed
+      - key: QUAD_API_KEY
+        sync: false
