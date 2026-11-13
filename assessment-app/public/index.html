@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recruiting Profile Check</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="top">
+    <p class="eyebrow">She's Next Recruits</p>
+    <h1>60-second recruiting profile check</h1>
+    <p class="lede">Seven quick questions. You'll get guidance based on Coach Tay's recruiting methodology. No account, email or phone number needed.</p>
+  </header>
+
+  <main>
+    <form id="quiz" novalidate>
+      <fieldset class="q" data-name="grade" data-type="single">
+        <legend><span class="n">1</span> What grade is she in right now?</legend>
+        <div class="chips" role="radiogroup"></div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend><span class="n">2</span> How tall is she?</legend>
+        <select id="height" name="height" required><option value="">Select height</option></select>
+      </fieldset>
+
+      <fieldset class="q" data-name="positions" data-type="multi">
+        <legend><span class="n">3</span> Which positions can she play? <span class="hint">Select all that apply</span></legend>
+        <div class="chips"></div>
+      </fieldset>
+
+      <fieldset class="q" data-name="playing" data-type="multi">
+        <legend><span class="n">4</span> Where does she currently play? <span class="hint">Select all that apply</span></legend>
+        <div class="chips"></div>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend><span class="n">5</span> What's her approximate GPA?</legend>
+        <select id="gpa" name="gpa" required><option value="">Select GPA range</option></select>
+      </fieldset>
+
+      <fieldset class="q" data-name="interest" data-type="multi" data-exclusive="none">
+        <legend><span class="n">6</span> What recruiting interest has she received so far? <span class="hint">Select all that apply</span></legend>
+        <div class="chips"></div>
+        <details class="sub" id="levelsBox">
+          <summary>From which levels? <span class="hint">Optional</span></summary>
+          <div class="chips" data-name="interestLevels" data-type="multi"></div>
+        </details>
+      </fieldset>
+
+      <fieldset class="q" data-name="distance" data-type="single">
+        <legend><span class="n">7</span> Where would she like to go to school?</legend>
+        <label class="zip">Your home ZIP code
+          <input id="zip" name="zip" inputmode="numeric" pattern="\d{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 63101">
+        </label>
+        <div class="chips" role="radiogroup"></div>
+      </fieldset>
+
+      <p class="error" id="formError" role="alert" hidden></p>
+      <button type="submit" class="primary" id="submitBtn">See her recruiting profile</button>
+      <p class="fine">Initial guidance, not a scouting evaluation. We don't store your answers.</p>
+    </form>
+
+    <section id="results" hidden aria-live="polite"></section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
